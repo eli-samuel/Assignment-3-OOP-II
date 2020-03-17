@@ -77,13 +77,14 @@ public class BibliographyFactory {
             System.out.println("Processing files");
             processFilesForValidation(input, output);
 
+            for (int i=0; i<output.length; i++) {
+                if (output[i] != null) output[i].close();
+            }
+
         }
         catch (FileNotFoundException e) {
             System.out.println("Could not open input file Latex"+ (k+1) + ".bib for reading. Please check if file exists! Program will terminate after closing any opened files.\n");
         }
-        // catch(Exception e) {
-        //     System.out.println(e.getMessage());
-        // }
         finally {
             for (int j=0; j<k; j++) {
                 if (input[j] != null) input[j].close();
@@ -125,25 +126,20 @@ public class BibliographyFactory {
                 String article = "";
                 while (input[i].hasNextLine()) {
                     String line = input[i].nextLine();
+
                     if (line.contains("@ARTICLE")) j++;
-                    if (line.contains("{}")) {
-                        throw new FileInvalidException("Invalid file at Latex" + (i+1) + " at article " + j);
-                    }
+                    if (line.contains("{}")) throw new FileInvalidException("Invalid file at Latex" + (i+1) + " at article " + j);
+
                     article += line + "\n";
-
-
-
-
-
-
                 }
-                // System.out.println(article);
-                // System.out.println(j);
 
-                doStuff(article, j);
+                String[] toPrint = new String[3];
+                toPrint = doStuff(article, j);
 
-
-
+                System.out.println("Printing to " + output[0]);
+                output[3*i + 0].println(toPrint[0]);
+                output[3*i + 1].println(toPrint[1]);
+                output[3*i + 2].println(toPrint[2]);
 
                 // if (!valid) {
                 //     throw new FileInvalidException("just a test");
@@ -236,12 +232,19 @@ public class BibliographyFactory {
             }
         }
 
+        String[] cite = {"", "", ""};
         for (int i=0; i<references.length; i++) {
-            System.out.println("references: " + references[i].IEEE() + "\n");
-            System.out.println("references: " + references[i].ACM() + "\n");
-            System.out.println("references: " + references[i].NJ() + "\n");
+            //System.out.println("REFERENCE IEEE: " + references[i].IEEE());
+            cite[0] += "["+(i+1)+"] " + references[i].IEEE() + "\n\n";
+            //System.out.println("REFERENCE ACM: " + references[i].ACM());
+            cite[1] += "["+(i+1)+"] " + references[i].ACM() + "\n\n";
+            //System.out.println("REFERENCE NJ: " + references[i].NJ());
+            cite[2] += "["+(i+1)+"] " + references[i].NJ() + "\n\n";
+            //System.out.println("\n\n");
         }
-        return new String[3];
+
+        System.out.println("returning");
+        return cite;
     }
 
 }

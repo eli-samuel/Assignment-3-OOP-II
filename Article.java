@@ -213,15 +213,15 @@ public class Article {
 	}
 
     public String IEEE() {
-        return "";
+        return (author + ", " + title + ", " + journal + ", vol. " + volume + ", no. " + number + ", p. " + pages + ", " + month + " (" + year + "), DOI:https://doi.org/" + doi);
     }
 
     public String ACM() {
-        return "";
+        return (author + " " + year + ", " + title + ", " + journal + ", " + volume + ", " + number + "(" + year + "), " + pages + ", DOI:https://doi.org/" + doi);
     }
 
     public String NJ() {
-        return "";
+        return (author + ". " + title + ". " + journal + ". " + volume + ", " + pages + "(" + year + ")");
     }
 
 	/**
