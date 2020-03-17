@@ -11,6 +11,8 @@ import java.io.FileReader;
 import java.io.File;
 import java.io.IOException;
 
+import java.util.StringTokenizer;
+
 public class BibliographyFactory {
 
     public static void main(String[] args) {
@@ -72,6 +74,7 @@ public class BibliographyFactory {
                 System.exit(0);
             }
 
+            System.out.println("Processing files");
             processFilesForValidation(input, output);
 
         }
@@ -79,7 +82,7 @@ public class BibliographyFactory {
             System.out.println("Could not open input file Latex"+ (k+1) + ".bib for reading. Please check if file exists! Program will terminate after closing any opened files.\n");
         }
         catch(Exception e) {
-            System.out.println(e);
+            System.out.println(e.getMessage());
         }
         finally {
             for (int j=0; j<k; j++) {
@@ -88,47 +91,148 @@ public class BibliographyFactory {
             }
         }
 
-        Scanner in = new Scanner(System.in);
-        BufferedReader reader = null;
-        for (int i=0; i<2; i++) {
-            try {
-                System.out.println("Enter a file to display");
-                reader = new BufferedReader(new FileReader(in.nextLine()));
-
-                System.out.println("File is valid.");
-
-                if (reader != null) reader.close();
-                break;
-            }
-            catch (FileNotFoundException e) {
-                if (i==0) System.out.println(e.getMessage() + " Try again.");
-                if (i==1) System.out.println(e.getMessage() + " Terminating program.");
-            }
-            catch (IOException e) {
-                System.out.println(e.getMessage());
-            }
-        }
+        // Scanner in = new Scanner(System.in);
+        // BufferedReader reader = null;
+        // for (int i=0; i<2; i++) {
+        //     try {
+        //         System.out.println("Enter a file to display");
+        //         reader = new BufferedReader(new FileReader(in.nextLine()));
+        //
+        //         System.out.println("File is valid.");
+        //
+        //         if (reader != null) reader.close();
+        //         break;
+        //     }
+        //     catch (FileNotFoundException e) {
+        //         if (i==0) System.out.println(e.getMessage() + " Try again.");
+        //         if (i==1) System.out.println(e.getMessage() + " Terminating program.");
+        //     }
+        //     catch (IOException e) {
+        //         System.out.println(e.getMessage());
+        //     }
+        // }
 
     }
 
     public static void processFilesForValidation(Scanner[] input, PrintWriter[] output) {
-        try {
-            for (int i=0; i<input.length; i++) {
-                boolean valid = true;
+        for (int i=0; i<input.length; i++) {
+            try {
+                //boolean valid = true;
+
+                int j=0;
+                String article = "";
+                while (input[i].hasNextLine()) {
+                    String line = input[i].nextLine();
+                    if (line.contains("@ARTICLE")) j++;
+                    if (line.contains("{}")) {
+                        throw new FileInvalidException("Invalid file at Latex" + (i+1) + " at article " + j);
+                    }
+                    article += line + "\n";
 
 
 
 
 
 
-                if (valid) {
-                    throw new FileInvalidException("just a test");
                 }
+                // System.out.println(article);
+                // System.out.println(j);
+
+                doStuff(article, j);
+
+
+
+
+                // if (!valid) {
+                //     throw new FileInvalidException("just a test");
+                // }
+            }
+            catch (FileInvalidException e) {
+                System.out.println(e.getMessage());
+                System.out.println("File will not be converted");
             }
         }
-        catch (FileInvalidException e) {
-            System.out.println(e.getMessage());
+    }
+
+    public static String[] doStuff(String s, int j) {
+        String[] article = s.split("\n");
+        for (int i=0; i<article.length; i++) System.out.println(article[i]);
+
+        Article[] references = new Article[j];
+        for (int i=0; i<references.length; i++) references[i] = new Article();
+
+        int k = 0;
+        int numFields = 0;
+        String field, ans = null;
+
+        for (int i=0; i<article.length; i++) {
+            if (article[i].length() == 0) {
+                System.out.println("article " + article[i]);
+                i++;
+                break;
+            }
+
+            if (i == article.length-1) System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+
+            StringTokenizer st = new StringTokenizer(article[i], "=");
+            //boolean hasTokens = st.countTokens()
+
+            field = st.nextToken();
+            System.out.println("field " + field);
+
+            if (st.countTokens() > 0) {
+                ans = st.nextToken();
+                System.out.println("ans " + ans);
+            }
+
+            numFields++;
+            switch (field) {
+                case "author":
+                    references[k].setAuthor(ans);
+                    break;
+                case "journal":
+                    references[k].setJournal(ans);
+                    break;
+                case "title":
+                    references[k].setTitle(ans);
+                    break;
+                case "year":
+                    references[k].setYear(ans);
+                    break;
+                case "volume":
+                    references[k].setVolume(ans);
+                    break;
+                case "number":
+                    references[k].setNumber(ans);
+                    break;
+                case "pages":
+                    references[k].setPages(ans);
+                    break;
+                case "keywords":
+                    references[k].setKeywords(ans);
+                    break;
+                case "doi":
+                    references[k].setDoi(ans);
+                    break;
+                case "ISSN":
+                    references[k].setISSN(ans);
+                    break;
+                case "month":
+                    references[k].setMonth(ans);
+                    break;
+
+            }
+
+            if (numFields == 13) {
+                numFields = 0;
+                k++;
+            }
         }
+
+        for (int i=0; i<references.length; i++) {
+            System.out.println(references[i]);
+        }
+        return new String[3];
     }
 
 }
