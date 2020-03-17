@@ -182,14 +182,14 @@ public class BibliographyFactory {
             }
 
             field = st.nextToken();
-            System.out.println("field " + field + " field");
+            //System.out.println("field " + field + " field");
 
             if (st.countTokens() > 0) {
                 ans = st.nextToken();
-                System.out.println("ans " + ans + " ans");
+                //System.out.println("ans " + ans + " ans");
+                numFields++;
             }
 
-            numFields++;
             switch (field) {
                 case "author":
                     references[k].setAuthor(ans);
@@ -227,16 +227,19 @@ public class BibliographyFactory {
 
             }
 
-            if (numFields == 13) {
+            //System.out.println(numFields);
+            if (numFields == 11) {
                 numFields = 0;
-                System.out.println("k " + k);
-                System.out.println("field " + field + " field");
+                // System.out.println("k " + k);
+                // System.out.println("field " + field + " field");
                 k++;
             }
         }
 
         for (int i=0; i<references.length; i++) {
-            System.out.println("references: " + references[i]);
+            System.out.println("references: " + references[i].IEEE() + "\n");
+            System.out.println("references: " + references[i].ACM() + "\n");
+            System.out.println("references: " + references[i].NJ() + "\n");
         }
         return new String[3];
     }
