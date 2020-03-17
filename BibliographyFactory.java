@@ -156,7 +156,7 @@ public class BibliographyFactory {
 
     public static String[] doStuff(String s, int j) {
         String[] article = s.split("\n");
-        for (int i=0; i<article.length; i++) System.out.println(article[i]);
+        //for (int i=0; i<article.length; i++) System.out.println(article[i]);
 
         Article[] references = new Article[j];
         for (int i=0; i<references.length; i++) references[i] = new Article();
@@ -166,13 +166,11 @@ public class BibliographyFactory {
         String field, ans = null;
 
         for (int i=0; i<article.length; i++) {
-            if (article[i].length() == 0) {
+            while (article[i].length() == 0) {
                 System.out.println("article " + article[i]);
                 i++;
-                break;
             }
 
-            if (i == article.length-1) System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 
             StringTokenizer st = new StringTokenizer(article[i], "=");
             //boolean hasTokens = st.countTokens()
@@ -230,7 +228,7 @@ public class BibliographyFactory {
         }
 
         for (int i=0; i<references.length; i++) {
-            System.out.println(references[i]);
+            System.out.println("references: " + references[i]);
         }
         return new String[3];
     }
