@@ -81,9 +81,9 @@ public class BibliographyFactory {
         catch (FileNotFoundException e) {
             System.out.println("Could not open input file Latex"+ (k+1) + ".bib for reading. Please check if file exists! Program will terminate after closing any opened files.\n");
         }
-        catch(Exception e) {
-            System.out.println(e.getMessage());
-        }
+        // catch(Exception e) {
+        //     System.out.println(e.getMessage());
+        // }
         finally {
             for (int j=0; j<k; j++) {
                 if (input[j] != null) input[j].close();
@@ -111,6 +111,8 @@ public class BibliographyFactory {
         //         System.out.println(e.getMessage());
         //     }
         // }
+
+        System.out.println("\nThanks for using the best program.");
 
     }
 
@@ -167,20 +169,24 @@ public class BibliographyFactory {
 
         for (int i=0; i<article.length; i++) {
             while (article[i].length() == 0) {
-                System.out.println("article " + article[i]);
+                //System.out.println("article " + article[i]);
                 i++;
             }
 
-
-            StringTokenizer st = new StringTokenizer(article[i], "=");
-            //boolean hasTokens = st.countTokens()
+            StringTokenizer st = null;
+            try {
+                st = new StringTokenizer(article[i], "=");
+            }
+            catch (NullPointerException e) {
+                System.out.println("Error: " + e);
+            }
 
             field = st.nextToken();
-            System.out.println("field " + field);
+            System.out.println("field " + field + " field");
 
             if (st.countTokens() > 0) {
                 ans = st.nextToken();
-                System.out.println("ans " + ans);
+                System.out.println("ans " + ans + " ans");
             }
 
             numFields++;
@@ -223,6 +229,8 @@ public class BibliographyFactory {
 
             if (numFields == 13) {
                 numFields = 0;
+                System.out.println("k " + k);
+                System.out.println("field " + field + " field");
                 k++;
             }
         }
