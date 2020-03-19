@@ -11,13 +11,10 @@ public class Article {
     private String ISSN;
     private String month;
 
-
 	/**
 	* Default empty Article constructor
 	*/
-	public Article() {
-        //
-	}
+	public Article() {}
 
 	/**
 	* Default Article constructor

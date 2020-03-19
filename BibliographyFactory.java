@@ -75,10 +75,29 @@ public class BibliographyFactory {
             }
 
             System.out.println("Processing files");
-            processFilesForValidation(input, output);
+            String[] invalidFileNums = processFilesForValidation(input, output);
 
             for (int i=0; i<output.length; i++) {
                 if (output[i] != null) output[i].close();
+            }
+
+            System.out.println("Deleting invalid files.");
+            File f;
+            for (int i=0; i<invalidFileNums.length; i++) {
+                f = new File("Output_Files/IEEE" + invalidFileNums[i] + ".json");
+                if (f.delete()) {
+                    System.out.println("Deleted " + f);
+                }
+
+                f = new File("Output_Files/ACM" + invalidFileNums[i] + ".json");
+                if (f.delete()) {
+                    System.out.println("Deleted " + f);
+                }
+
+                f = new File("Output_Files/NJ" + invalidFileNums[i] + ".json");
+                if (f.delete()) {
+                    System.out.println("Deleted " + f);
+                }
             }
 
         }
@@ -117,7 +136,8 @@ public class BibliographyFactory {
 
     }
 
-    public static void processFilesForValidation(Scanner[] input, PrintWriter[] output) {
+    public static String[] processFilesForValidation(Scanner[] input, PrintWriter[] output) {
+        String invalidFiles = "";
         for (int i=0; i<input.length; i++) {
             try {
                 //boolean valid = true;
@@ -128,7 +148,10 @@ public class BibliographyFactory {
                     String line = input[i].nextLine();
 
                     if (line.contains("@ARTICLE")) j++;
-                    if (line.contains("{}")) throw new FileInvalidException("Invalid file at Latex" + (i+1) + " at article " + j);
+                    if (line.contains("{}")) {
+                        invalidFiles += (i+1) + " ";
+                        throw new FileInvalidException("Invalid file at Latex" + (i+1) + " at article " + j);
+                    }
 
                     article += line + "\n";
                 }
@@ -136,7 +159,6 @@ public class BibliographyFactory {
                 String[] toPrint = new String[3];
                 toPrint = doStuff(article, j);
 
-                System.out.println("Printing to " + output[0]);
                 output[3*i + 0].println(toPrint[0]);
                 output[3*i + 1].println(toPrint[1]);
                 output[3*i + 2].println(toPrint[2]);
@@ -150,6 +172,10 @@ public class BibliographyFactory {
                 System.out.println("File will not be converted");
             }
         }
+
+        return invalidFiles.split(" ");
+
+
     }
 
     public static String[] doStuff(String s, int j) {
