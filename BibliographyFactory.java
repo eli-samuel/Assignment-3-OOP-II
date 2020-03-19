@@ -20,9 +20,10 @@ public class BibliographyFactory {
         Scanner[] input = new Scanner[10];
         PrintWriter[] output = new PrintWriter[30];
 
-        System.out.println("Welcome to Bibliography Factory\n");
+        System.out.println("\nWelcome to Bibliography Factory\n");
 
         int k=0;
+        boolean error = false;
         try {
             for (k=0; k<input.length; k++) {
                 input[k] = new Scanner(new FileInputStream("Comp249_W20_Assg3_Files/Latex" + (k+1) + ".bib"));
@@ -81,41 +82,38 @@ public class BibliographyFactory {
                 if (output[i] != null) output[i].close();
             }
 
-            System.out.println("Deleting invalid files.");
+            System.out.println("A total of " + invalidFileNums.length + " files were invalid and could not be processed.\nAll " + (input.length - invalidFileNums.length) + " other valid files were created.\nDeleting invalid files.");
             File f;
             for (int i=0; i<invalidFileNums.length; i++) {
                 f = new File("Output_Files/IEEE" + invalidFileNums[i] + ".json");
-                if (f.delete()) {
-                    System.out.println("Deleted " + f);
-                }
+                if (f.delete()) {} //System.out.println("Deleted " + f);
 
                 f = new File("Output_Files/ACM" + invalidFileNums[i] + ".json");
-                if (f.delete()) {
-                    System.out.println("Deleted " + f);
-                }
+                if (f.delete()) {} //System.out.println("Deleted " + f);
+
 
                 f = new File("Output_Files/NJ" + invalidFileNums[i] + ".json");
-                if (f.delete()) {
-                    System.out.println("Deleted " + f);
-                }
+                if (f.delete()) {} //System.out.println("Deleted " + f);
             }
 
         }
         catch (FileNotFoundException e) {
             System.out.println("Could not open input file Latex"+ (k+1) + ".bib for reading. Please check if file exists! Program will terminate after closing any opened files.\n");
+            error = true;
         }
         finally {
             for (int j=0; j<k; j++) {
                 if (input[j] != null) input[j].close();
-                System.out.println("Closed Comp249_W20_Assg3_Files/Latex" + (j+1) + ".bib");
+                //System.out.println("Closed Comp249_W20_Assg3_Files/Latex" + (j+1) + ".bib");
             }
+            if (error) System.exit(0);
         }
 
         Scanner in = new Scanner(System.in);
         BufferedReader reader = null;
         for (int i=0; i<2; i++) {
             try {
-                System.out.print("Enter a file to display: ");
+                System.out.print("\nEnter a file to display: ");
                 reader = new BufferedReader(new FileReader("Output_Files/" + in.nextLine()));
 
                 System.out.println("\nFile is valid. Printing contents:\n");
@@ -130,9 +128,9 @@ public class BibliographyFactory {
                 break;
             }
             catch (FileNotFoundException e) {
-                if (i==0) System.out.println(e.getMessage() + " Try again.");
+                if (i==0) System.out.println(e.getMessage() + " Try again."); // better text
                 if (i==1) {
-                    System.out.println(e.getMessage() + " Terminating program.");
+                    System.out.println(e.getMessage() + " Terminating program."); // better text
                     System.exit(0);
                 }
             }
@@ -159,7 +157,7 @@ public class BibliographyFactory {
                         invalidFiles += (i+1) + " ";
                         StringTokenizer s = new StringTokenizer(line, "=");
                         System.out.println();
-                        throw new FileInvalidException("Invalid file at Latex" + (i+1) + " at article " + j + ". Field \"" + s.nextToken() + "\" is empty. Processing stopped at this point. Other empty fields may be present as well.");
+                        throw new FileInvalidException("Error: Detected empty field!\nInvalid file at Latex" + (i+1) + " at article " + j + ".\nField \"" + s.nextToken() + "\" is empty. Processing stopped at this point. Other empty fields may be present as well.\nFile will not be converted.\n");
                     }
                     article += line + "\n";
                 }
@@ -173,7 +171,6 @@ public class BibliographyFactory {
             }
             catch (FileInvalidException e) {
                 System.out.println(e.getMessage());
-                System.out.println("File will not be converted");
             }
         }
 
@@ -191,9 +188,7 @@ public class BibliographyFactory {
         String field, ans = null;
 
         for (int i=0; i<article.length; i++) {
-            while (article[i].length() == 0) {
-                i++;
-            }
+            while (article[i].length() == 0) i++;
 
             StringTokenizer st = null;
             try {
@@ -244,7 +239,6 @@ public class BibliographyFactory {
                 case "month":
                     references[k].setMonth(ans);
                     break;
-
             }
 
             if (numFields == 11) {
@@ -260,7 +254,6 @@ public class BibliographyFactory {
             cite[2] += "["+(i+1)+"] " + references[i].NJ() + "\n\n";
         }
 
-        System.out.println("returning");
         return cite;
     }
 
