@@ -111,28 +111,37 @@ public class BibliographyFactory {
             }
         }
 
-        // Scanner in = new Scanner(System.in);
-        // BufferedReader reader = null;
-        // for (int i=0; i<2; i++) {
-        //     try {
-        //         System.out.println("Enter a file to display");
-        //         reader = new BufferedReader(new FileReader(in.nextLine()));
-        //
-        //         System.out.println("File is valid.");
-        //
-        //         if (reader != null) reader.close();
-        //         break;
-        //     }
-        //     catch (FileNotFoundException e) {
-        //         if (i==0) System.out.println(e.getMessage() + " Try again.");
-        //         if (i==1) System.out.println(e.getMessage() + " Terminating program.");
-        //     }
-        //     catch (IOException e) {
-        //         System.out.println(e.getMessage());
-        //     }
-        // }
+        Scanner in = new Scanner(System.in);
+        BufferedReader reader = null;
+        for (int i=0; i<2; i++) {
+            try {
+                System.out.print("Enter a file to display: ");
+                reader = new BufferedReader(new FileReader("Output_Files/" + in.nextLine()));
 
-        System.out.println("\nThanks for using the best program.");
+                System.out.println("\nFile is valid. Printing contents:\n");
+
+                String brLine = "";
+                while (brLine != null) {
+                    System.out.println(brLine);
+                    brLine = reader.readLine();
+                }
+
+                if (reader != null) reader.close();
+                break;
+            }
+            catch (FileNotFoundException e) {
+                if (i==0) System.out.println(e.getMessage() + " Try again.");
+                if (i==1) {
+                    System.out.println(e.getMessage() + " Terminating program.");
+                    System.exit(0);
+                }
+            }
+            catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
+        System.out.println("Thanks for using the best program.");
 
     }
 
@@ -140,8 +149,6 @@ public class BibliographyFactory {
         String invalidFiles = "";
         for (int i=0; i<input.length; i++) {
             try {
-                //boolean valid = true;
-
                 int j=0;
                 String article = "";
                 while (input[i].hasNextLine()) {
@@ -150,9 +157,10 @@ public class BibliographyFactory {
                     if (line.contains("@ARTICLE")) j++;
                     if (line.contains("{}")) {
                         invalidFiles += (i+1) + " ";
-                        throw new FileInvalidException("Invalid file at Latex" + (i+1) + " at article " + j);
+                        StringTokenizer s = new StringTokenizer(line, "=");
+                        System.out.println();
+                        throw new FileInvalidException("Invalid file at Latex" + (i+1) + " at article " + j + ". Field \"" + s.nextToken() + "\" is empty. Processing stopped at this point. Other empty fields may be present as well.");
                     }
-
                     article += line + "\n";
                 }
 
@@ -162,10 +170,6 @@ public class BibliographyFactory {
                 output[3*i + 0].println(toPrint[0]);
                 output[3*i + 1].println(toPrint[1]);
                 output[3*i + 2].println(toPrint[2]);
-
-                // if (!valid) {
-                //     throw new FileInvalidException("just a test");
-                // }
             }
             catch (FileInvalidException e) {
                 System.out.println(e.getMessage());
@@ -174,13 +178,10 @@ public class BibliographyFactory {
         }
 
         return invalidFiles.split(" ");
-
-
     }
 
     public static String[] doStuff(String s, int j) {
         String[] article = s.split("\n");
-        //for (int i=0; i<article.length; i++) System.out.println(article[i]);
 
         Article[] references = new Article[j];
         for (int i=0; i<references.length; i++) references[i] = new Article();
@@ -191,7 +192,6 @@ public class BibliographyFactory {
 
         for (int i=0; i<article.length; i++) {
             while (article[i].length() == 0) {
-                //System.out.println("article " + article[i]);
                 i++;
             }
 
@@ -204,11 +204,9 @@ public class BibliographyFactory {
             }
 
             field = st.nextToken();
-            //System.out.println("field " + field + " field");
 
             if (st.countTokens() > 0) {
                 ans = st.nextToken();
-                //System.out.println("ans " + ans + " ans");
                 numFields++;
             }
 
@@ -249,24 +247,17 @@ public class BibliographyFactory {
 
             }
 
-            //System.out.println(numFields);
             if (numFields == 11) {
                 numFields = 0;
-                // System.out.println("k " + k);
-                // System.out.println("field " + field + " field");
                 k++;
             }
         }
 
         String[] cite = {"", "", ""};
         for (int i=0; i<references.length; i++) {
-            //System.out.println("REFERENCE IEEE: " + references[i].IEEE());
             cite[0] += "["+(i+1)+"] " + references[i].IEEE() + "\n\n";
-            //System.out.println("REFERENCE ACM: " + references[i].ACM());
             cite[1] += "["+(i+1)+"] " + references[i].ACM() + "\n\n";
-            //System.out.println("REFERENCE NJ: " + references[i].NJ());
             cite[2] += "["+(i+1)+"] " + references[i].NJ() + "\n\n";
-            //System.out.println("\n\n");
         }
 
         System.out.println("returning");

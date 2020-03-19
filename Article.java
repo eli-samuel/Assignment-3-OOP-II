@@ -1,5 +1,5 @@
 public class Article {
-    private String author;
+    private String[] author;
     private String journal;
     private String title;
     private String year;
@@ -20,7 +20,7 @@ public class Article {
 	* Default Article constructor
 	*/
 	public Article(String author, String journal, String title, String year, String volume, String number, String pages, String keywords, String doi, String ISSN, String month) {
-		this.author = author;
+		this.author = author.split(" ");
 		this.journal = journal;
 		this.title = title;
 		this.year = year;
@@ -37,7 +37,7 @@ public class Article {
 	* Returns value of author
 	* @return
 	*/
-	public String getAuthor() {
+	public String[] getAuthor() {
 		return author;
 	}
 
@@ -46,7 +46,7 @@ public class Article {
 	* @param
 	*/
 	public void setAuthor(String author) {
-		this.author = author;
+        this.author = getRidOfExtraStuff(author).split(" and ");
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class Article {
 	* @param
 	*/
 	public void setJournal(String journal) {
-		this.journal = journal;
+		this.journal = getRidOfExtraStuff(journal);
 	}
 
 	/**
@@ -78,7 +78,7 @@ public class Article {
 	* @param
 	*/
 	public void setTitle(String title) {
-		this.title = title;
+		this.title = getRidOfExtraStuff(title);
 	}
 
 	/**
@@ -94,7 +94,7 @@ public class Article {
 	* @param
 	*/
 	public void setYear(String year) {
-		this.year = year;
+		this.year = getRidOfExtraStuff(year);
 	}
 
 	/**
@@ -110,7 +110,7 @@ public class Article {
 	* @param
 	*/
 	public void setVolume(String volume) {
-		this.volume = volume;
+		this.volume = getRidOfExtraStuff(volume);
 	}
 
 	/**
@@ -126,7 +126,7 @@ public class Article {
 	* @param
 	*/
 	public void setNumber(String number) {
-		this.number = number;
+		this.number = getRidOfExtraStuff(number);
 	}
 
 	/**
@@ -142,7 +142,7 @@ public class Article {
 	* @param
 	*/
 	public void setPages(String pages) {
-		this.pages = pages;
+		this.pages = getRidOfExtraStuff(pages);
 	}
 
 	/**
@@ -158,7 +158,7 @@ public class Article {
 	* @param
 	*/
 	public void setKeywords(String keywords) {
-		this.keywords = keywords;
+		this.keywords = getRidOfExtraStuff(keywords);
 	}
 
     /**
@@ -174,7 +174,7 @@ public class Article {
     * @param
     */
     public void setDoi(String doi) {
-        this.doi = doi;
+        this.doi = getRidOfExtraStuff(doi);
     }
 
 	/**
@@ -190,7 +190,7 @@ public class Article {
 	* @param
 	*/
 	public void setISSN(String ISSN) {
-		this.ISSN = ISSN;
+		this.ISSN = getRidOfExtraStuff(ISSN);
 	}
 
 	/**
@@ -206,19 +206,51 @@ public class Article {
 	* @param
 	*/
 	public void setMonth(String month) {
-		this.month = month;
+		this.month = getRidOfExtraStuff(month + " ");
 	}
 
+    /**
+    *
+    *
+    */
+    // All strings will start with a '{' and end with a '}, '
+    public String getRidOfExtraStuff(String word) {
+        return word.substring(1, word.length()-3);
+    }
+
+    /**
+    *
+    *
+    */
     public String IEEE() {
-        return (author + ", " + title + ", " + journal + ", vol. " + volume + ", no. " + number + ", p. " + pages + ", " + month + " (" + year + "), DOI:https://doi.org/" + doi);
+        String newAuthor = "";
+        for (int i=0; i<author.length-1; i++) newAuthor += author[i] + ", ";
+        newAuthor += author[author.length-1];
+
+        return (newAuthor + ". \"" + title + "\", " + journal + ", vol. " + volume + ", no. " + number + ", p. " + pages + ", " + month + " " + year + ".");
     }
 
+    /**
+    *
+    *
+    */
     public String ACM() {
-        return (author + " " + year + ", " + title + ", " + journal + ", " + volume + ", " + number + "(" + year + "), " + pages + ", DOI:https://doi.org/" + doi);
+        String newAuthor = author[0];
+        if (author.length > 1) newAuthor += " et al.";
+
+        return (newAuthor + " " + year + ". " + title + ". " + journal + ". " + volume + ", " + number + " (" + year + "), " + pages + ". DOI:https://doi.org/" + doi + ".");
     }
 
+    /**
+    *
+    *
+    */
     public String NJ() {
-        return (author + ". " + title + ". " + journal + ". " + volume + ", " + pages + "(" + year + ")");
+        String newAuthor = "";
+        for (int i=0; i<author.length-1; i++) newAuthor += author[i] + " & ";
+        newAuthor += author[author.length-1];
+
+        return (newAuthor + ". " + title + ". " + journal + ". " + volume + ", " + pages + "(" + year + ").");
     }
 
 	/**
