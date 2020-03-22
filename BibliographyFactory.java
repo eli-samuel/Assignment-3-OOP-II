@@ -125,6 +125,7 @@ public class BibliographyFactory {
                 }
 
                 if (reader != null) reader.close();
+                in.close()
                 break;
             }
             catch (FileNotFoundException e) {
@@ -143,6 +144,10 @@ public class BibliographyFactory {
 
     }
 
+    /**
+    *
+    *
+    */
     public static String[] processFilesForValidation(Scanner[] input, PrintWriter[] output) {
         String invalidFiles = "";
         for (int i=0; i<input.length; i++) {
@@ -156,7 +161,11 @@ public class BibliographyFactory {
                     if (line.contains("{}")) {
                         invalidFiles += (i+1) + " ";
                         StringTokenizer s = new StringTokenizer(line, "=");
-                        System.out.println();
+                        System.out.println(); // WHAT IS THIS HERE FOR??
+                        // ^^^^^^^^^^^^^^^
+                        // fix?
+                        // did i want to print something?
+                        //
                         throw new FileInvalidException("Error: Detected empty field!\nInvalid file at Latex" + (i+1) + " at article " + j + ".\nField \"" + s.nextToken() + "\" is empty. Processing stopped at this point. Other empty fields may be present as well.\nFile will not be converted.\n");
                     }
                     article += line + "\n";
@@ -177,6 +186,10 @@ public class BibliographyFactory {
         return invalidFiles.split(" ");
     }
 
+    /**
+    *
+    *
+    */
     public static String[] doStuff(String s, int j) {
         String[] article = s.split("\n");
 
