@@ -76,25 +76,13 @@ public class BibliographyFactory {
             }
 
             System.out.println("Processing files");
-            String[] invalidFileNums = processFilesForValidation(input, output);
+            int invalidFileNum = processFilesForValidation(input, output);
 
             for (int i=0; i<output.length; i++) {
                 if (output[i] != null) output[i].close();
             }
 
-            System.out.println("A total of " + invalidFileNums.length + " files were invalid and could not be processed.\nAll " + (input.length - invalidFileNums.length) + " other valid files were created.\nDeleting invalid files.");
-            File f;
-            for (int i=0; i<invalidFileNums.length; i++) {
-                f = new File("Output_Files/IEEE" + invalidFileNums[i] + ".json");
-                if (f.delete()) {} //System.out.println("Deleted " + f);
-
-                f = new File("Output_Files/ACM" + invalidFileNums[i] + ".json");
-                if (f.delete()) {} //System.out.println("Deleted " + f);
-
-
-                f = new File("Output_Files/NJ" + invalidFileNums[i] + ".json");
-                if (f.delete()) {} //System.out.println("Deleted " + f);
-            }
+            System.out.println("A total of " + invalidFileNum + " files were invalid and could not be processed.\nAll " + (input.length - invalidFileNum) + " other valid files were created.\nDeleting invalid files.");
 
         }
         catch (FileNotFoundException e) {
@@ -125,7 +113,7 @@ public class BibliographyFactory {
                 }
 
                 if (reader != null) reader.close();
-                in.close()
+                in.close();
                 break;
             }
             catch (FileNotFoundException e) {
@@ -148,7 +136,7 @@ public class BibliographyFactory {
     *
     *
     */
-    public static String[] processFilesForValidation(Scanner[] input, PrintWriter[] output) {
+    public static int processFilesForValidation(Scanner[] input, PrintWriter[] output) {
         String invalidFiles = "";
         for (int i=0; i<input.length; i++) {
             try {
@@ -180,10 +168,23 @@ public class BibliographyFactory {
             }
             catch (FileInvalidException e) {
                 System.out.println(e.getMessage());
+                File f;
+                f = new File("Output_Files/IEEE" + (i+1) + ".json");
+                output[3*i+0].close();
+                f.delete(); //System.out.println("Deleted " + f);
+
+                f = new File("Output_Files/ACM" + (i+1) + ".json");
+                output[3*i+1].close();
+                f.delete(); //System.out.println("Deleted " + f);
+
+
+                f = new File("Output_Files/NJ" + (i+1) + ".json");
+                output[3*i+2].close();
+                f.delete(); //System.out.println("Deleted " + f);
             }
         }
 
-        return invalidFiles.split(" ");
+        return invalidFiles.split(" ").length;
     }
 
     /**

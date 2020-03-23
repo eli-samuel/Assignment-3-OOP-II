@@ -34,27 +34,11 @@ public class Article {
 	}
 
 	/**
-	* Returns value of author
-	* @return
-	*/
-	public String[] getAuthor() {
-		return author;
-	}
-
-	/**
 	* Sets new value of author
 	* @param
 	*/
 	public void setAuthor(String author) {
         this.author = getRidOfExtraStuff(author).split(" and ");
-	}
-
-	/**
-	* Returns value of journal
-	* @return
-	*/
-	public String getJournal() {
-		return journal;
 	}
 
 	/**
@@ -66,27 +50,11 @@ public class Article {
 	}
 
 	/**
-	* Returns value of title
-	* @return
-	*/
-	public String getTitle() {
-		return title;
-	}
-
-	/**
 	* Sets new value of title
 	* @param
 	*/
 	public void setTitle(String title) {
 		this.title = getRidOfExtraStuff(title);
-	}
-
-	/**
-	* Returns value of year
-	* @return
-	*/
-	public String getYear() {
-		return year;
 	}
 
 	/**
@@ -98,27 +66,11 @@ public class Article {
 	}
 
 	/**
-	* Returns value of volume
-	* @return
-	*/
-	public String getVolume() {
-		return volume;
-	}
-
-	/**
 	* Sets new value of volume
 	* @param
 	*/
 	public void setVolume(String volume) {
 		this.volume = getRidOfExtraStuff(volume);
-	}
-
-	/**
-	* Returns value of number
-	* @return
-	*/
-	public String getNumber() {
-		return number;
 	}
 
 	/**
@@ -130,27 +82,11 @@ public class Article {
 	}
 
 	/**
-	* Returns value of pages
-	* @return
-	*/
-	public String getPages() {
-		return pages;
-	}
-
-	/**
 	* Sets new value of pages
 	* @param
 	*/
 	public void setPages(String pages) {
 		this.pages = getRidOfExtraStuff(pages);
-	}
-
-	/**
-	* Returns value of keywords
-	* @return
-	*/
-	public String getKeywords() {
-		return keywords;
 	}
 
 	/**
@@ -162,14 +98,6 @@ public class Article {
 	}
 
     /**
-    * Returns value of doi
-    * @return
-    */
-    public String getDoi() {
-        return doi;
-    }
-
-    /**
     * Sets new value of doi
     * @param
     */
@@ -178,27 +106,11 @@ public class Article {
     }
 
 	/**
-	* Returns value of ISSN
-	* @return
-	*/
-	public String getISSN() {
-		return ISSN;
-	}
-
-	/**
 	* Sets new value of ISSN
 	* @param
 	*/
 	public void setISSN(String ISSN) {
 		this.ISSN = getRidOfExtraStuff(ISSN);
-	}
-
-	/**
-	* Returns value of month
-	* @return
-	*/
-	public String getMonth() {
-		return month;
 	}
 
 	/**
